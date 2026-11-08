@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>rotate 靶场</title>
+<style>
+body{font-family:sans-serif;background:#1e1e2e;color:#cdd6f4;display:flex;flex-direction:column;align-items:center;padding:20px}
+#master{border-radius:8px}#thumb{border-radius:50%;position:absolute;top:-56px;right:-56px;border:2px solid #89b4fa}
+.wrap{position:relative;margin-bottom:30px}
+#slider{width:280px}
+.st{margin:8px 0;font-size:14px}
+button{padding:6px 16px;margin-top:10px;cursor:pointer}
+</style></head><body>
+<h3>go-captcha 旋转靶场（本地）</h3>
+<div class="wrap"><img id="master" width="240"><img id="thumb" width="64"></div>
+<input id="slider" type="range" min="0" max="360" value="0" step="1">
+<div class="st">角度: <span id="ang">0</span>°</div>
+<button onclick="load()">换一题</button>
+<div class="st" id="result"></div>
+<script>
+let key='';
+async function load(){
+  const r = await (await fetch('/api/rotate')).json();
+  key = r.data.key;
+  document.getElementById('master').src = r.data.image;
+  document.getElementById('thumb').src = r.data.thumb;
+  document.getElementById('slider').value = 0;
+  document.getElementById('ang').textContent = 0;
+  document.getElementById('result').textContent = '';
+}
+document.getElementById('slider').oninput = async e => {
+  const a = +e.target.value;
+  document.getElementById('ang').textContent = a;
+  document.getElementById('thumb').style.transform = `rotate(${a}deg)`;
+};
+document.getElementById('slider').onchange = async e => {
+  const a = +e.target.value;
+  const r = await (await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key,angle:a})})).json();
+  document.getElementById('result').textContent = r.data.pass ? `✅ 通过（真值 ${360-r.data.dangle}°）` : `❌ 偏差 ${r.data.angle} vs 真值 ${360-r.data.dangle}`;
+};
+load();
+</script></body></html>

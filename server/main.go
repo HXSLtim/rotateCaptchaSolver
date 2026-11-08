@@ -76,6 +76,13 @@ func main() {
 		}})
 	})
 
-	fmt.Println("go-captcha rotate 靶场 :9901")
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			b, _ := os.ReadFile("index.html")
+			w.Write(b)
+			return
+		}
+	})
+	fmt.Println("go-captcha rotate 靶场 :9901 （页面: http://127.0.0.1:9901/）")
 	http.ListenAndServe("127.0.0.1:9901", nil)
 }
