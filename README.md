@@ -14,3 +14,13 @@ thumb（被随机旋转的内盘）按 1° 步进转 360 圈，每个角度取�
 ## 文件
 - rotateSolver.py   求解器（fetch/solve/verify，20 轮回归）
 - server/           本地 go-captcha 靶场（真值已知，可回归）
+
+## 靶场使用原则：按需起停，不常驻
+```bash
+# 要回归时才起（一条命令），测完即停
+cd server && ./gcserver &           # 起
+../.venv/bin/python rotateSolver.py # 回归
+pkill -f gcserver                    # 停（不占任何资源）
+```
+线上靶场（无常驻成本，被限流则等一会）：gocaptcha.wencodes.com/demo
+其数据接口 demo.gocaptcha.wencodes.com/api/go-captcha-data/rotate-basic
