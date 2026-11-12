@@ -19,7 +19,7 @@ thumb（被随机旋转的内盘）按 1° 步进转 360 圈，每个角度取�
 ```bash
 # 要回归时才起（一条命令），测完即停
 cd server && ./gcserver &           # 起
-../.venv/bin/python rotateSolver.py # 回归
+../../.venv/bin/python rotateSolver.py # 回归
 pkill -f gcserver                    # 停（不占任何资源）
 ```
 线上靶场（无常驻成本，被限流则等一会）：gocaptcha.wencodes.com/demo
